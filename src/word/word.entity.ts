@@ -9,7 +9,7 @@ import {
     Entity,
     PrimaryGeneratedColumn,
   } from 'typeorm';
-import { GameEntity } from '../game/entities/game.entity';
+import { Game } from '../game/game.entity';
 
 @Entity('word')
 export class Word extends BaseEntity {
@@ -22,13 +22,12 @@ export class Word extends BaseEntity {
   @Column({ type: 'float' })
   similarity: number;
 
-  @Column({ type: 'boolean' , default:'false'})
+  @Column({ type: 'boolean'})
   isAnswer: boolean;
 
-
-  @ManyToOne(() => GameEntity, (game) => game.id, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Game, (game) => game.id, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'game_id' })
-  game: GameEntity;
+  game: Game;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

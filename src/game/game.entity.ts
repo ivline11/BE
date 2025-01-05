@@ -9,10 +9,10 @@ import {
     PrimaryGeneratedColumn,
   } from 'typeorm';
 
-import { Word } from '../../word/word.entity';
+import { Word } from '../word/word.entity';
 
 @Entity()
-export class GameEntity extends BaseEntity {
+export class Game extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 

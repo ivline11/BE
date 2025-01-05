@@ -1,0 +1,12 @@
+[
+    {
+      "inputs": [
+        { "internalType": "string", "name": "word", "type": "string" }
+      ],
+      "name": "submitWord",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    }
+  ]
+  
