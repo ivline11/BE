@@ -15,29 +15,37 @@ export class WordService{
     
     constructor(
         private readonly wordRepository : WordRepository,
-        private readonly gameRepository : GameRepository,
         private readonly fastApiService: FastApiService,
      ){}
 
-    async createWordsList (){
+     async createWordsList() {
         try {
-            const selectedWord = await this.fastApiService.selectWord();
-
-            const similarWords = await this.fastApiService.getSimilarWords(selectedWord);
-
-            const wordsList = similarWords.map(({ word, similarity }) => {
-              const wordEntity = new Word();
-              wordEntity.word = word;
-              wordEntity.similarity = similarity;
-              return wordEntity;
-            });
-
-            await this.wordRepository.save(wordsList);
-            return response(BaseResponse.CREATE_WORDS_LIST_SUCCESS);
-
+          // FastAPI에서 단어 가져오기
+          const selectedWord = await this.fastApiService.selectWord();
+          const similarWords = await this.fastApiService.getSimilarWords(selectedWord);
+    
+          // 단어 리스트 생성
+          const wordsList = similarWords.map(({ word, similarity }) => {
+            const wordEntity = new Word();
+            wordEntity.word = word;
+            wordEntity.similarity = similarity;
+            wordEntity.isAnswer = false; 
+            return wordEntity;
+          });
+    
+          // 정답 단어 추가
+          const selectedWordEntity = new Word();
+          selectedWordEntity.word = selectedWord;
+          selectedWordEntity.similarity = 100;
+          selectedWordEntity.isAnswer = true;
+    
+          // 단어 저장
+          await this.wordRepository.saveWordsList([...wordsList, selectedWordEntity]);
+    
+          return response(BaseResponse.CREATE_WORDS_LIST_SUCCESS);
         } catch (error) {
-            console.error(error);
-            return errResponse(BaseResponse.CREATE_WORDS_LIST_FAILED);
+          console.error(error);
+          return errResponse(BaseResponse.CREATE_WORDS_LIST_FAILED);
         }
     }
 }

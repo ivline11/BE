@@ -18,6 +18,7 @@ export class WordController {
   })
   @Get('words-list')
   async createWordsList(){
-    return this.wordService.createWordsList;
+    const result = await this.wordService.createWordsList();
+    return result;
   }
 }

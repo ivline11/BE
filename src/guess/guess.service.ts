@@ -8,7 +8,7 @@ import { ProofService } from 'src/contracts/proof.service';
 import { GetWordInfoDto } from './dtos/get-word-info.dto';
 
 @Injectable()
-export class WordService {
+export class GuessService {
 
     constructor(
         private readonly wordRepository: WordRepository,

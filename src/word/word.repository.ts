@@ -11,4 +11,8 @@ export class WordRepository extends Repository<Word>{
     async findWordByValue(word: string): Promise<Word | null> {
         return this.findOne({ where: { word } });
     }
+
+    async saveWordsList(wordsList: Word[]): Promise<void> {
+        await this.save(wordsList);
+      }
 }

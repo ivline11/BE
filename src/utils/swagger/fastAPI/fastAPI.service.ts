@@ -3,7 +3,7 @@ import axios from 'axios';
 
 @Injectable()
 export class FastApiService {
-  private readonly baseUrl = 'http://localhost:8000'; // FastAPI 서버 주소
+  private readonly baseUrl = 'http://localhost:5000'; // FastAPI 서버 주소
 
   async selectWord(): Promise<string> {
     try {
