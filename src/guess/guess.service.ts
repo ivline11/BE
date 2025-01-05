@@ -1,5 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { ethers } from 'ethers';
+import { ethers,recoverAddress } from 'ethers';
 import { WordRepository } from '../word/word.repository';
 import { GuessWordBodyDto } from './dtos/guess-word-body.dto';
 import { SubmitWordBodyDto } from 'src/guess/dtos/submit-word-body.dto';
@@ -19,7 +19,7 @@ export class WordService {
     async guessWord(guessWordBodyDto : GuessWordBodyDto): Promise<GetWordInfoDto>{
         // 1. 주소 검증 
         const message = `Sign this message to verify your wallet: ${guessWordBodyDto.walletAddress}`;
-        const recoveredAddress = ethers.utils.verifyMessage(message, guessWordBodyDto.signature);
+        const recoveredAddress = recoverAddress(message, guessWordBodyDto.signature);
         if (recoveredAddress.toLowerCase() !== guessWordBodyDto.walletAddress.toLowerCase()) {
             throw new UnauthorizedException('Invalid signature or address mismatch');
         }
@@ -44,7 +44,7 @@ export class WordService {
                 if (!isValid) {
                     throw new Error('Proof verification failed.');
                 }
-                
+
                 return {
                     word,
                     similarity: matchedWord.similarity,
@@ -57,8 +57,6 @@ export class WordService {
                         isAnswer: false,
                 };
             }
-        }
-          
+        }         
     }
-
 }
