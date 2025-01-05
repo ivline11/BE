@@ -8,7 +8,7 @@ export class WordRepository extends Repository<Word>{
         super(Word, dataSource.createEntityManager());
     }
 
-    async saveWords(wordsList: Word[]): Promise<Word[]> {
-        return this.save(wordsList); 
-      }
+    async findWordByValue(word: string): Promise<Word | null> {
+        return this.findOne({ where: { word } });
+    }
 }

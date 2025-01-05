@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req} from '@nestjs/common';
+import { Body, Controller, Get, Req} from '@nestjs/common';
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { Request } from 'express';
 import { WordService } from './word.service';
@@ -16,11 +16,8 @@ export class WordController {
   @ApiOkResponse({
     description: '성공 ',
   })
-  @Post('words-list')
-  async createWordsList(
-    @Body() body: CreateWordsListDto,
-  ){
-    const result = await this.wordService.saveWords(body);
-    return result;
+  @Get('words-list')
+  async createWordsList(){
+    return this.wordService.createWordsList;
   }
 }
