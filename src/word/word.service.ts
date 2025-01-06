@@ -23,6 +23,7 @@ export class WordService{
           // FastAPI에서 단어 가져오기
           const selectedWord = await this.fastApiService.selectWord();
           const similarWords = await this.fastApiService.getSimilarWords(selectedWord);
+          console.log("select :", selectedWord, "similarWords :", similarWords);
     
           // 단어 리스트 생성
           const wordsList = similarWords.map(({ word, similarity }) => {
@@ -32,6 +33,7 @@ export class WordService{
             wordEntity.isAnswer = false; 
             return wordEntity;
           });
+          console.log("list" , wordsList);
     
           // 정답 단어 추가
           const selectedWordEntity = new Word();
