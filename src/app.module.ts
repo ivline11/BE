@@ -34,6 +34,8 @@ import { Game } from './game/game.entity';
     }),
     LogModule,
     WordModule,
+    GuessModule,
+    GameModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -6,7 +6,7 @@ import { GuessService } from './guess.service';
 export class GuessController {
 
   constructor(private readonly guessService: GuessService) {}
-  @Post(':gameId/guess')
+  @Post('/:gameId/guess')
   async guessWord(
     @Param('gameId') gameId: number, 
     @Body() guessWordBodyDto: GuessWordBodyDto, 

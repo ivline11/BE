@@ -39,6 +39,7 @@ export class GuessService {
         const fee = process.env.FEE;
         const submitWordBodyDto : SubmitWordBodyDto = {
             walletAddress,
+            signature,
             word,
             fee
         };

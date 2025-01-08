@@ -7,6 +7,10 @@ export class SubmitWordBodyDto {
 
   @IsString()
   @IsNotEmpty()
+  signature: string; 
+
+  @IsString()
+  @IsNotEmpty()
   word: string; 
 
   @IsNumberString()

@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { JsonRpcProvider, Wallet, Contract } from 'ethers';
 import * as snarkjs from 'snarkjs';
 import * as fs from 'fs/promises';
-import * as abi from './abi/proof-contract.abi.json';
 
 @Injectable()
 export class ProofService {
@@ -24,6 +23,21 @@ export class ProofService {
     }
 
     this.signer = new Wallet(privateKey, this.provider);
+
+    // ABI를 코드에 직접 포함
+    const abi = [
+      {
+        "inputs": [
+          { "internalType": "bytes", "name": "proof", "type": "bytes" },
+          { "internalType": "uint256[]", "name": "publicSignals", "type": "uint256[]" }
+        ],
+        "name": "submitProof",
+        "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+        "stateMutability": "view",
+        "type": "function"
+      }
+    ];
+
     this.contract = new Contract(this.contractAddress, abi, this.signer);
   }
 

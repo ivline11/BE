@@ -21,12 +21,11 @@ export class WordService{
      async createWordsList() {
         try {
           // FastAPI에서 단어 가져오기
-          const selectedWord = await this.fastApiService.selectWord();
-          const similarWords = await this.fastApiService.getSimilarWords(selectedWord);
-          console.log("select :", selectedWord, "similarWords :", similarWords);
+          const { answer, similar_words } = await this.fastApiService.generateWordsList();
+          console.log()
     
           // 단어 리스트 생성
-          const wordsList = similarWords.map(({ word, similarity }) => {
+          const wordsList = similar_words.map(({ word, similarity }) => {
             const wordEntity = new Word();
             wordEntity.word = word;
             wordEntity.similarity = similarity;
@@ -36,13 +35,13 @@ export class WordService{
           console.log("list" , wordsList);
     
           // 정답 단어 추가
-          const selectedWordEntity = new Word();
-          selectedWordEntity.word = selectedWord;
-          selectedWordEntity.similarity = 100;
-          selectedWordEntity.isAnswer = true;
+          const answerEntity = new Word();
+          answerEntity.word = answer.word;
+          answerEntity.similarity = 100;
+          answerEntity.isAnswer = true;
     
           // 단어 저장
-          await this.wordRepository.saveWordsList([...wordsList, selectedWordEntity]);
+          await this.wordRepository.saveWordsList([...wordsList, answerEntity]);
     
           return response(BaseResponse.CREATE_WORDS_LIST_SUCCESS);
         } catch (error) {
