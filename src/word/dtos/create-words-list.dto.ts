@@ -7,14 +7,15 @@ export class WordDto {
 
   @IsNumber()
   similarity: number;
-
-  @IsBoolean()
-  isAnswer : boolean;
 }
 
 export class CreateWordsListDto {
+  @ValidateNested()
+  @Type(() => WordDto)
+  answer: WordDto; // 정답 단어 및 유사도
+
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => WordDto)
-  words: WordDto[]; 
+  similar_words:WordDto[]; // 유사 단어 목록
 }
