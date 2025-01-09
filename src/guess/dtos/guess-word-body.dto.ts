@@ -1,13 +1,16 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
 
 export class GuessWordBodyDto {
-
+  @ApiProperty({ description: '추측한 단어', example: 'apple' })
   @IsString()
-  word: string; 
+  word: string;
 
-  @IsString()
-  walletAddress: string; 
+  // @ApiProperty({ description: '사용자의 지갑 주소', example: '0x1234567890abcdef1234567890abcdef12345678' })
+  // @IsString()
+  // walletAddress: string;
 
-  @IsString()
-  signature: string; 
+  // @ApiProperty({ description: '지갑 서명', example: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890' })
+  // @IsString()
+  // signature: string;
 }

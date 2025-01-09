@@ -3,7 +3,7 @@ import { HttpModule } from '@nestjs/axios';
 import { WordService } from './word.service';
 import { WordController } from './word.controller';
 import { WordRepository } from './word.repository';
-import { FastApiModule } from '../utils/swagger/fastAPI/fastAPI.module';
+import { FastApiModule } from '../utils/fastAPI/fastAPI.module';
 
 @Module({
     imports : [HttpModule,FastApiModule],

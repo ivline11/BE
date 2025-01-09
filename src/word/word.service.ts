@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { FastApiService } from 'src/utils/swagger/fastAPI/fastAPI.service';
+import { FastApiService } from 'src/utils/fastAPI/fastAPI.service';
 import { WordRepository } from './word.repository';
 import { CreateWordsListDto } from './dtos/create-words-list.dto';
 import { Word } from './word.entity';

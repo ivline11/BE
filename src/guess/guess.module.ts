@@ -8,7 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProofService } from 'src/contracts/proof.service';
 import { WordService } from 'src/word/word.service';
 import { SubmitService } from 'src/contracts/submit.service';
-import { FastApiModule } from 'src/utils/swagger/fastAPI/fastAPI.module';
+import { FastApiModule } from 'src/utils/fastAPI/fastAPI.module';
 
 @Module({
     imports: [
