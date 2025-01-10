@@ -1,13 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { HttpService } from '@nestjs/axios';
 import { FastApiService } from 'src/utils/fastAPI/fastAPI.service';
 import { WordRepository } from './word.repository';
-import { CreateWordsListDto } from './dtos/create-words-list.dto';
 import { Word } from './word.entity';
-import { Game } from '../game/game.entity';
 import {response,errResponse } from '../response/response';
 import { BaseResponse } from '../response/response.status';
-import { GameRepository } from 'src/game/game.repository';
 
 
 @Injectable()
@@ -43,7 +39,7 @@ export class WordService{
           // 단어 저장
           await this.wordRepository.saveWordsList([...wordsList, answerEntity]);
     
-          return response(BaseResponse.CREATE_WORDS_LIST_SUCCESS);
+          return answer;
         } catch (error) {
           console.error(error);
           return errResponse(BaseResponse.CREATE_WORDS_LIST_FAILED);

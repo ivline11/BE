@@ -12,7 +12,4 @@ export class GetLogInfoDto {
 
   @IsNumber()
   rank: number;
-
-  @IsBoolean()
-  isAnswer: boolean;
 }

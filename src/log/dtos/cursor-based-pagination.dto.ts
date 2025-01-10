@@ -6,7 +6,7 @@ export class CursorBasedPaginationRequestDto {
   @ApiProperty({
     description: '커서 값',
     required: false,
-    default: 3,
+    default: 0,
   })
   @IsInt()
   @IsOptional()

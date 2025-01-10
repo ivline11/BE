@@ -9,5 +9,5 @@ export class GetWordInfoDto {
   similarity: number; 
 
   @IsBoolean()
-  isAnswer: boolean;
+  isAnswer : boolean;
 }

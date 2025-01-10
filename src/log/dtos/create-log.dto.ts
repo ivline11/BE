@@ -9,7 +9,4 @@ export class CreateLogDto {
 
   @IsNumber()
   similarity: number;
-
-  @IsBoolean()
-  isAnswer: boolean;
 }

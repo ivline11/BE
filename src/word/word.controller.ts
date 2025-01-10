@@ -1,8 +1,6 @@
-import { Body, Controller, Get, Req} from '@nestjs/common';
+import {Controller, Get} from '@nestjs/common';
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
-import { Request } from 'express';
 import { WordService } from './word.service';
-import { CreateWordsListDto } from './dtos/create-words-list.dto';
 
 @Controller('word')
 export class WordController {

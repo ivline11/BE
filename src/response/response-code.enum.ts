@@ -15,9 +15,10 @@ export enum ResponseCode {
 
     /* 404 NOT_FOUND : Resource 를 찾을 수 없음 */
     USER_NOT_FOUND = 'NOT_FOUND',
+    GAME_NOT_FOUND = '게임이 종료되었습니다.',
 
     /* 409 CONFLICT : Resource 의 현재 상태와 충돌. 보통 중복된 데이터 존재 */
 
     /* 500 INTERNAL_SERVER_ERROR */
-  INTERNAL_SERVEr_ERROR = 'INTERNAL_SERVER_ERROR',
+  INTERNAL_SERVER_ERROR = 'INTERNAL_SERVER_ERROR',
 }

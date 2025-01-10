@@ -1,4 +1,4 @@
-import { Schema as MongooseSchema, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, HydratedDocument } from 'mongoose';
 
 export type LogDocument = HydratedDocument<Log>;
@@ -15,9 +15,6 @@ export class Log extends Document {
 
   @Prop({ type: Number, required: true })
   similarity: number; 
-
-  @Prop({ type: Boolean, required: true })
-  isCorrect: boolean; 
 
   @Prop({ type: Date, default: Date.now })
   createdAt: Date; 
