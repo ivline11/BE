@@ -1,4 +1,4 @@
-import { Schema as MongooseSchema, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, HydratedDocument } from 'mongoose';
 
 export type LogDocument = HydratedDocument<Log>;
@@ -6,20 +6,15 @@ export type LogDocument = HydratedDocument<Log>;
   collection: 'log', 
 })
 export class Log extends Document {
-  @Prop({ type: String, required: true })
-  gameId: string; 
 
   @Prop({ type: String, required: true })
-  userId: string; 
+  walletAddress: string; 
 
   @Prop({ type: String, required: true })
-  guessedWord: string; 
+  word: string; 
 
   @Prop({ type: Number, required: true })
   similarity: number; 
-
-  @Prop({ type: Boolean, required: true })
-  isCorrect: boolean; 
 
   @Prop({ type: Date, default: Date.now })
   createdAt: Date; 
