@@ -1,9 +1,13 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, LoggerService, UnauthorizedException } from '@nestjs/common';
 import { ethers, hashMessage, verifyMessage } from 'ethers';
 import { WordRepository } from '../word/word.repository';
 import { GuessWordBodyDto } from './dtos/guess-word-body.dto';
 import { GetWordInfoDto } from './dtos/get-word-info.dto';
 import { WordService } from '../word/word.service';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Log, LogDocument } from '../log/log.schema';
+import { LogService } from 'src/log/log.service';
 
 @Injectable()
 export class GuessService {
@@ -14,6 +18,8 @@ export class GuessService {
   constructor(
     private readonly wordRepository: WordRepository,
     private readonly wordService: WordService,
+    private readonly logService : LogService,
+    @InjectModel(Log.name) private readonly logModel: Model<LogDocument>,
   ) {
     // Provider 및 Signer 초기화
     this.provider = new ethers.JsonRpcProvider(process.env.BLOCKCHAIN_RPC_URL);
@@ -64,22 +70,31 @@ export class GuessService {
       throw new Error('Failed to check gameEnded status');
     }
   
-    // 2. 트랜잭션 실행
-    const fee = ethers.parseEther(process.env.FEE || '0.01');
-    try {
-      const tx = await this.contract.guessWord(guessWordBodyDto.word, {
-        value: fee,
-        gasLimit:  ethers.parseUnits('1000000', 'wei') // 가스 제한 설정
-      });
-      const receipt = await tx.wait();
-      console.log(`Transaction successful: ${receipt.transactionHash}`);
-    } catch (error) {
-      console.error('Error submitting guessWord transaction:', error);
-      throw new Error('Failed to submit guessWord transaction');
-    }
+    // // 2. 트랜잭션 실행
+    // const fee = ethers.parseEther(process.env.FEE || '0.01');
+    // try {
+    //   const tx = await this.contract.guessWord(guessWordBodyDto.word, {
+    //     value: fee,
+    //     gasLimit:  ethers.parseUnits('1000000', 'wei') // 가스 제한 설정
+    //   });
+    //   const receipt = await tx.wait();
+    //   console.log(`Transaction successful: ${receipt.transactionHash}`);
+    // } catch (error) {
+    //   console.error('Error submitting guessWord transaction:', error);
+    //   throw new Error('Failed to submit guessWord transaction');
+    // }
   
     // 3. 유사도 반환
     const matchedWord = await this.wordRepository.findWordByValue(guessWordBodyDto.word);
+    const logData = {
+        walletAddress: guessWordBodyDto.walletAddress,
+        word: guessWordBodyDto.word,
+        similarity: matchedWord?.similarity || 0,
+        isAnswer: matchedWord?.isAnswer || false,
+      };
+  
+      await this.logService.addLog(logData);
+
     if (matchedWord) {
       if (matchedWord.isAnswer) {
         await this.wordService.createWordsList();

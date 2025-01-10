@@ -6,9 +6,9 @@ export class GuessWordBodyDto {
   @IsString()
   word: string;
 
-  // @ApiProperty({ description: '사용자의 지갑 주소', example: '0x1234567890abcdef1234567890abcdef12345678' })
-  // @IsString()
-  // walletAddress: string;
+  @ApiProperty({ description: '사용자의 지갑 주소', example: '0x1234567890abcdef1234567890abcdef12345678' })
+  @IsString()
+  walletAddress: string;
 
   // @ApiProperty({ description: '지갑 서명', example: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890' })
   // @IsString()

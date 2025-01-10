@@ -6,14 +6,12 @@ export type LogDocument = HydratedDocument<Log>;
   collection: 'log', 
 })
 export class Log extends Document {
-  @Prop({ type: String, required: true })
-  gameId: string; 
 
   @Prop({ type: String, required: true })
-  userId: string; 
+  walletAddress: string; 
 
   @Prop({ type: String, required: true })
-  guessedWord: string; 
+  word: string; 
 
   @Prop({ type: Number, required: true })
   similarity: number; 

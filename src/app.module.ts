@@ -3,13 +3,14 @@ import { ConfigModule, ConfigService} from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GameModule } from './game/game.module';
-import { LogModule } from './database/log.module';
+import { LogModule } from './log/log.module';
 import {GuessModule} from './guess/guess.module';
 import { WordModule } from './word/word.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Word } from './word/word.entity';
 import { Game } from './game/game.entity';
+import { RedisModule } from './utils/redis/redis.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { Game } from './game/game.entity';
     WordModule,
     GuessModule,
     GameModule,
+    RedisModule,
   ],
   controllers: [AppController],
   providers: [AppService],
