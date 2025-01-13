@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { JsonRpcProvider, Wallet, Contract, parseEther } from 'ethers';
+import { JsonRpcProvider, Wallet, Contract, parseEther, formatEther } from 'ethers';
 import { WordRepository } from '../word/word.repository';
 import { GuessWordBodyDto } from './dtos/guess-word-body.dto';
 import { GetWordInfoDto } from './dtos/get-word-info.dto';
@@ -61,7 +61,6 @@ export class GuessService {
   private async checkAndInitializeGame(): Promise<void> {
     try {
       const gameEnded: boolean = await this.contract.gameEnded();
-      console.log('Game ended status:', gameEnded);
 
       if (gameEnded) {
         console.log('Game ended. Initializing new game...');
@@ -74,7 +73,14 @@ export class GuessService {
   }
 
   private async submitFeeToContract(word: string): Promise<void> {
+    const gameEnded: boolean = await this.contract.gameEnded();
+      console.log('Game ended status:', gameEnded);
+    
     const fee = parseEther(process.env.FEE || '0.001');
+    console.log('Fee being sent:', fee.toString());
+    const balance = await this.provider.getBalance(this.signer.address);
+    console.log('Wallet balance:', formatEther(balance));
+
     try {
       const tx = await this.contract.guessWord(word, {
         value: fee,
@@ -84,6 +90,7 @@ export class GuessService {
       console.log('Transaction successful:', receipt.transactionHash);
     } catch (error) {
       console.error('Error submitting transaction to contract:', error);
+      console.error('Revert reason:', error.reason);
       throw new Error('Failed to submit transaction');
     }
   }
@@ -96,8 +103,9 @@ export class GuessService {
       await this.clearDatabases();
       const newGame = await this.wordService.createWordsList();
       const tx = await this.contract.setAnswer(newGame, {
-        gasLimit: 100_000,
+        gasLimit: 50_000,
       });
+      console.log("answer",newGame);
       const receipt = await tx.wait();
       console.log('New answer set in contract:', receipt.transactionHash);
     } catch (error) {
