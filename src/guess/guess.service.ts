@@ -78,12 +78,11 @@ export class GuessService {
 
   /**
    * 새로운 게임 초기화
-   */
+   */  
   private async initializeNewGame(): Promise<void> {
     try {
       await this.clearDatabases();
       const newGame = await this.wordService.createWordsList();
-      const owner = await this.contract.owner();
       const tx = await this.contract.setAnswer(newGame, {
         gasLimit: 100_000,
       });

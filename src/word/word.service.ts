@@ -45,7 +45,7 @@ export class WordService{
           // 단어 저장
           //await this.wordRepository.saveWordsList([answerEntity,...wordsList]);
     
-          return answer;
+          return answer.word;
         } catch (error) {
           console.error(error);
           return errResponse(BaseResponse.CREATE_WORDS_LIST_FAILED);

@@ -24,18 +24,21 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
     console.log('RedisService disconnected');
   }
 
-  async addLog(createLogDto : CreateLogDto): Promise<void> {
+  async addLog(createLogDto: CreateLogDto): Promise<void> {
     const log = createLogDto;
+    const timestamp = Date.now(); // 최신순 정렬을 위한 타임스탬프 추가
     const logData = JSON.stringify({
       walletAddress: log.walletAddress,
       word: log.word,
       similarity: log.similarity,
     });
 
-    await this.redis.zadd(this.sortedSetKey, log.similarity, logData);
+    await this.redis.zadd(this.sortedSetKey, timestamp.toString(), logData);
   }
+  
 
   async getSortedLogs(offset: number, limit: number): Promise<LogDocument[]> {
+    // 최신순으로 정렬된 로그를 반환
     const logStrings = await this.redis.zrevrange(this.sortedSetKey, offset, offset + limit - 1);
 
     return logStrings.map((logString) => JSON.parse(logString));
@@ -44,18 +47,14 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   async cacheLogs(logs: LogDocument[]): Promise<void> {
     const pipeline = this.redis.pipeline();
     logs.forEach((log) => {
+      const timestamp = log.createdAt || Date.now(); // 생성 시간
       const logData = JSON.stringify({
         walletAddress: log.walletAddress,
         word: log.word,
         similarity: log.similarity,
-        createdAt: log.createdAt,
       });
-      pipeline.zadd(this.sortedSetKey, log.similarity, logData);
+      pipeline.zadd(this.sortedSetKey, timestamp.toString(), logData);
     });
     await pipeline.exec();
-  }
-
-  async clearCache(): Promise<void> {
-    await this.redis.del(this.sortedSetKey);
-  }
+  }  
 }
