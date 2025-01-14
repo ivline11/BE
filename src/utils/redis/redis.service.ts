@@ -24,6 +24,11 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
     console.log('RedisService disconnected');
   }
 
+  async clearLogs(): Promise<void> {
+    await this.redis.del(this.sortedSetKey);
+    console.log('Redis logs cleared.');
+  }
+
   async addLog(createLogDto: CreateLogDto): Promise<void> {
     const log = createLogDto;
     const timestamp = Date.now(); // 최신순 정렬을 위한 타임스탬프 추가

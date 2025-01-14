@@ -23,7 +23,7 @@ export class WordService{
           // 정답 단어 추가
           const answerEntity = new Word();
           answerEntity.word = answer.word;
-          answerEntity.similarity = 100;
+          answerEntity.similarity = 1;
           answerEntity.isAnswer = true;
           await Word.save(answerEntity);
 

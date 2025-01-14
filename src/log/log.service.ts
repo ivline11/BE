@@ -56,6 +56,6 @@ export class LogService {
 
   async clearLogs(): Promise<void> {
     await this.logModel.deleteMany({});
-    console.log('Log DB cleared.');
+    await this.redisService.clearLogs();
   }
 }
