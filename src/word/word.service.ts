@@ -16,11 +16,18 @@ export class WordService{
      ){}
 
      async createWordsList() {
+    
         try {
           // FastAPI에서 단어 가져오기
           const { answer, similar_words } = await this.fastApiService.generateWordsList();
-          console.log("answer",answer);
-          console.log(answer.word);
+          // 정답 단어 추가
+          const answerEntity = new Word();
+          answerEntity.word = answer.word;
+          answerEntity.similarity = 100;
+          answerEntity.isAnswer = true;
+          await Word.save(answerEntity);
+
+
     
           // 단어 리스트 생성
           const wordsList = similar_words.map(({ word, similarity }) => {
@@ -29,18 +36,11 @@ export class WordService{
             wordEntity.similarity = similarity;
             wordEntity.isAnswer = false; 
             Word.save(wordEntity);
-            console.log(wordEntity);
           });
 
           console.log("list" , wordsList);
     
-          // 정답 단어 추가
-          const answerEntity = new Word();
-          answerEntity.word = answer.word;
-          answerEntity.similarity = 100;
-          answerEntity.isAnswer = true;
-          await Word.save(answerEntity);
-          console.log("answerEntity",answerEntity);
+
     
           // 단어 저장
           //await this.wordRepository.saveWordsList([answerEntity,...wordsList]);
