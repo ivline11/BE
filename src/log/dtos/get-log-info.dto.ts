@@ -2,14 +2,14 @@ import { IsString, IsNumber, IsBoolean } from 'class-validator';
 
 export class GetLogInfoDto {
   @IsString()
-  walletAddress: string;
+  player: string;
 
   @IsString()
-  word: string;
+  guess: string;
 
   @IsNumber()
   similarity: number;
 
   @IsNumber()
-  rank: number;
+  proximity: number;
 }

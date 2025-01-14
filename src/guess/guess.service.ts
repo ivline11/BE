@@ -30,28 +30,31 @@ export class GuessService {
   async guessWord(guessWordBodyDto: GuessWordBodyDto): Promise<GetWordInfoDto> {
     const { word, walletAddress } = guessWordBodyDto;
 
+
     // 1. 게임 상태 확인
     await this.checkAndInitializeGame();
-    console.log("check");
-    console.log(word);
+
 
     // 2. 비용 제출 및 proof 생성
-    await this.submitFeeToContract(word);
     await this.generateProof(word);
+
 
     // 3. 단어 찾기
     const matchedWord = await this.wordRepository.findWordByValue(word);
 
     // 4. 로그 생성
-    const log = this.createLog(walletAddress, matchedWord);
+    const log = this.createLog(walletAddress, matchedWord || { word, similarity: 0, isAnswer: false } as Word);
     await this.logService.addLog(log);
+    console.log("Log saved successfully.");
 
     // 5. 정답 확인 및 게임 초기화
     if (matchedWord?.isAnswer) {
       await this.initializeNewGame();
+      console.log("Matched word is the answer. Initializing new game...");
     }
 
     // 6. 유사도 반환
+    console.log("Getting word info...");
     return this.getWordInfo(matchedWord, word);
   }
 
@@ -73,21 +76,6 @@ export class GuessService {
     }
   }
 
-  private async submitFeeToContract(word: string): Promise<void> {
-    const fee = parseEther(process.env.FEE || '0.001');
-    try {
-      const tx = await this.contract.guessWord(word, {
-        value: fee,
-        gasLimit: 100_000,
-      });
-      const receipt = await tx.wait();
-      console.log('Transaction successful:', receipt.transactionHash);
-    } catch (error) {
-      console.error('Error submitting transaction to contract:', error);
-      throw new Error('Failed to submit transaction');
-    }
-  }
-
   /**
    * 새로운 게임 초기화
    */
@@ -95,6 +83,7 @@ export class GuessService {
     try {
       await this.clearDatabases();
       const newGame = await this.wordService.createWordsList();
+      const owner = await this.contract.owner();
       const tx = await this.contract.setAnswer(newGame, {
         gasLimit: 100_000,
       });
@@ -133,10 +122,14 @@ export class GuessService {
    * 로그 생성
    */
   private createLog(walletAddress: string, word: Word | null) {
+    if (!word || !word.word) {
+      throw new Error('Cannot create log without a valid word.');
+    }
+  
     return {
       walletAddress,
-      word: word?.word || '',
-      similarity: word?.similarity || 0,
+      word: word.word,
+      similarity: word.similarity || 0,
     };
   }
 

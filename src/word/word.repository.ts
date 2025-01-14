@@ -13,9 +13,11 @@ export class WordRepository extends Repository<Word>{
     }
 
     async saveWordsList(wordsList: Word[]): Promise<void> {
-        await this.save(wordsList);
+        await this.save(wordsList); // 새로 저장
         console.log('Words saved successfully');
     }
+    
+    
 
     async clearWords(): Promise<void> {
         await this.clear();

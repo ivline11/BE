@@ -40,18 +40,18 @@ export class LogService {
       const logsList = [...cachedLogs, ...dbLogs];
 
       return logsList.map((log, index) => ({
-        walletAddress: log.walletAddress,
-        word: log.word,
+        player: log.walletAddress,
+        guess: log.word,
         similarity: log.similarity,
-        rank: cursor + index + 1, 
+        proximity: cursor + index + 1, 
       }));
     }
   
     return cachedLogs.map((log, index) => ({
-      walletAddress: log.walletAddress,
-      word: log.word,
+      player: log.walletAddress,
+      guess: log.word,
       similarity: log.similarity,
-      rank: cursor + index + 1, 
+      proximity: cursor + index + 1, 
     }));
   }
   async clearLogs(): Promise<void> {
