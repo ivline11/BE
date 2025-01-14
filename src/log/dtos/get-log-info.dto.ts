@@ -1,4 +1,4 @@
-import { IsString, IsNumber, IsBoolean } from 'class-validator';
+import { IsString, IsNumber, IsDate } from 'class-validator';
 
 export class GetLogInfoDto {
   @IsString()
@@ -12,4 +12,5 @@ export class GetLogInfoDto {
 
   @IsNumber()
   proximity: number;
+
 }
