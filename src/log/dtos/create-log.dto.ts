@@ -9,4 +9,7 @@ export class CreateLogDto {
 
   @IsNumber()
   similarity: number;
+
+  @IsString()
+  proximity: string;
 }

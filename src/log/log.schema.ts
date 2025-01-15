@@ -16,6 +16,9 @@ export class Log extends Document {
   @Prop({ type: Number, required: true })
   similarity: number; 
 
+  @Prop({ type: String, required: true })
+  proximity: string; 
+
   @Prop({ type: Date, default: Date.now })
   createdAt: Date; 
 }

@@ -10,7 +10,7 @@ export class GetLogInfoDto {
   @IsNumber()
   similarity: number;
 
-  @IsNumber()
-  proximity: number;
+  @IsString()
+  proximity: string;
 
 }

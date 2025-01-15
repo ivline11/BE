@@ -36,6 +36,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
       walletAddress: log.walletAddress,
       word: log.word,
       similarity: log.similarity,
+      proximity : log.proximity
     });
 
     await this.redis.zadd(this.sortedSetKey, timestamp.toString(), logData);
@@ -57,6 +58,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
         walletAddress: log.walletAddress,
         word: log.word,
         similarity: log.similarity,
+        proximity : log.proximity
       });
       pipeline.zadd(this.sortedSetKey, timestamp.toString(), logData);
     });

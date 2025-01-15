@@ -22,37 +22,38 @@ export class LogService {
 
   async getLogs(options: CursorBasedPaginationRequestDto): Promise<GetLogInfoDto[]> {
     const { cursor = 0, pageSize = 3 } = options;
-
+  
     const cachedLogs = await this.redisService.getSortedLogs(cursor, pageSize);
-
+  
     if (cachedLogs.length < pageSize) {
       const cachedCount = cachedLogs.length;
       const dbCursor = cursor + cachedCount;
-
+  
       const dbLogs = await this.logModel
         .find()
-        .sort({ createdAt: -1 }) 
+        .sort({ createdAt: -1 })
         .skip(dbCursor)
         .limit(pageSize - cachedCount)
         .exec();
-
+  
       const logsList = [...cachedLogs, ...dbLogs];
-
-      return logsList.map((log, index) => ({
+  
+      return logsList.map((log) => ({
         player: log.walletAddress,
         guess: log.word,
         similarity: log.similarity,
-        proximity: cursor + index + 1, 
+        proximity: log.proximity, 
       }));
     }
-
-    return cachedLogs.map((log, index) => ({
+  
+    return cachedLogs.map((log) => ({
       player: log.walletAddress,
       guess: log.word,
       similarity: log.similarity,
-      proximity: cursor + index + 1, 
+      proximity: log.proximity,
     }));
   }
+  
 
   async clearLogs(): Promise<void> {
     await this.logModel.deleteMany({});
