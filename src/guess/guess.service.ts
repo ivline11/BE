@@ -9,6 +9,8 @@ import { feeContractAbi } from '../contracts/abi/fee-contract.abi';
 import { Word } from '../word/word.entity';
 import { ProofService } from 'src/proof/proof.service';
 
+
+
 @Injectable()
 export class GuessService {
   private readonly provider: JsonRpcProvider;
@@ -26,10 +28,12 @@ export class GuessService {
     this.signer = new Wallet(process.env.PRIVATE_KEY as string, this.provider);
     this.contract = new Contract(contractAddress, feeContractAbi, this.signer);
   }
+  
 
   async guessWord(guessWordBodyDto: GuessWordBodyDto): Promise<GetWordInfoDto> {
     const { word, walletAddress } = guessWordBodyDto;
 
+    
     // 1. 게임 상태 확인
     await this.checkAndInitializeGame();
 
@@ -46,13 +50,22 @@ export class GuessService {
  
     // 5. 정답 확인 및 게임 초기화
     if (matchedWord?.isAnswer) {
-      await this.initializeNewGame();   
-      console.log("Matched word is the answer. Initializing new game...");
+      const tx = await this.contract.changeStatus({ gasLimit: 200000 });
+      const receipt = await tx.wait();
+      console.log("changeStatus called. isAnswer set to true.");
+      const tx1 =await this.contract.endGame({ gasLimit: 200000 });
+      console.log("endGame called. gameEnded set to true.");
+      const receipt1 = await tx1.wait();
+      await this.checkAndInitializeGame();
+      console.log("Game initialized.");
+      
     }
 
     // 6. 유사도 반환
-    console.log("Getting word info...");
-    return this.getWordInfo(matchedWord, word);
+    
+    
+      console.log("Getting word info...");
+      return this.getWordInfo(matchedWord, word);
   }
 
   /**
@@ -80,11 +93,9 @@ export class GuessService {
     try {
       await this.clearDatabases();
       const newGame = await this.wordService.createWordsList();
-      const tx = await this.contract.setAnswer(newGame, {
-        gasLimit: 100_000,
-      });
-      const receipt = await tx.wait();
-      console.log('New answer set in contract:', receipt.transactionHash);
+      await this.contract.restartGame();
+
+      console.log('New answer set in backend')
     } catch (error) {
       console.error('Error initializing new game:', error);
       throw new Error('Failed to initialize new game');
